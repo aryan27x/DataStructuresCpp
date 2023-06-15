@@ -144,6 +144,7 @@ void deleteNode(int position)
         prevTemp->link = temp->link;
 
         }
+  
         delete temp;
         temp = nullptr;
     }
@@ -165,8 +166,33 @@ void flushList()
 }
    }
 
-void reverseList() //TBD
+void reverseList() 
 {
+    if (listLength != 0 && listLength != 1)
+    {
+        
+        int listCopy[listLength];
+        int ctr = listLength;
+        Node* temp = accessPointer;
+        while (true)
+        {
+            listCopy[ctr-1] = temp->payload;
+            if (temp->link == nullptr)
+            {
+                break;
+            }
+             temp = temp->link;
+            ctr--;
+
+        }
+        ctr = listLength;
+        flushList();
+    for (int i = 0;i<ctr;i++)
+    {
+        insertNode(listCopy[i]);
+    }
+    
+    } 
 }
    
 int main()
@@ -182,6 +208,7 @@ int main()
     cout << "1)Insert Node \n";
     cout << "2)Delete Node \n";
     cout << "3)Flush List \n";
+    cout << "4)Reverse List \n";
     
     cout << "0)Exit \n";
     int choice;
@@ -208,6 +235,11 @@ int main()
         cout << "Flushing List... \n";
         flushList();
         break;
+        
+        case 4:
+        reverseList();
+        break;
+
 
         case 0:
         cout << "Flushing List... \n";
