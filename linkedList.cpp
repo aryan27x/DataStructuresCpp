@@ -166,7 +166,35 @@ void flushList()
 }
    }
 
-void reverseList() 
+void reverseList()
+{
+if (listLength != 1 && listLength != 0)
+{
+    
+    Node* temp = accessPointer;
+    Node* forwardPointer = nullptr;
+    Node* prevPointer = nullptr;
+    
+    while (true)
+    {
+       if (temp->link == nullptr)
+       {
+        accessPointer = temp;
+       temp->link = prevPointer;
+        break;
+       }
+     
+        
+        forwardPointer = temp->link;
+        temp->link = prevPointer;
+        prevPointer = temp;
+        temp = forwardPointer;
+    }
+
+}
+
+} //define such a function that you reverse a list without creating a duplicate/deleting the previous one
+/* void reverseList() 
 {
     if (listLength != 0 && listLength != 1)
     {
@@ -194,14 +222,13 @@ void reverseList()
     
     } 
 }
-   
+ */  
 int main()
 {
     bool flag = true;
  while (flag)
  {
     cout << endl;
-
     printList();
     
     cout << endl;
