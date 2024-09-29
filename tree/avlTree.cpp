@@ -16,11 +16,13 @@ Node(int value)
     data = value;
     left = nullptr;
     right = nullptr;
-    height = 1;
+    height = 1; // this is the extra param in node of avl tree
 }
 };
 
 
+
+// Helper Functions
 int height (Node *& current)
 {
     if (!current) return 0;
@@ -33,24 +35,28 @@ int balanceFactor(Node *& current)
     return height(current->left) - height(current->right);
 }
 
+
 void updateHeight (Node *& root)
 {
     if (!root) return;
     root->height = 1 + max(height(root->left) , height(root->right));
 }
+
+
+
+// main rotation functions
+
+
 Node * rotateLeft (Node * current)
 {
-
     Node * x = current->right;
     Node * buffer = x->left;
     x->left = current;
     current->right = buffer;
     updateHeight(current);
     updateHeight(x);
-
-    return x;
+    return x; // returning the new root node
 }
-
 Node * rotateRight (Node * current)
 {
     Node * x = current->left;
@@ -59,12 +65,13 @@ Node * rotateRight (Node * current)
     current->left = buffer;
     updateHeight(current);
     updateHeight(x);
-    return x;
+    return x; // returning the new root node
 }
 
 
 Node * insertInto (Node * root , Node * newNode)
 {
+    // first we normally insert the node as we would in a BST
     if (!root)
     {
         root = newNode;
@@ -76,8 +83,10 @@ Node * insertInto (Node * root , Node * newNode)
         root->right = insertInto(root->right , newNode);
     else return root;
 
-    root->height = 1 + max(height(root->left) , height(root->right));
-
+    // while backtracking the recursive call , we do the following
+    // update the height of the node
+    updateHeight(root);
+    // get the balance factor of the node
     int bf = balanceFactor(root);
 
     if (bf > 1) // left imbalance
@@ -87,7 +96,7 @@ Node * insertInto (Node * root , Node * newNode)
             // ll rotation
             root = rotateRight(root);
         }
-        else 
+        else // right heavy 
         {
             // lr rotation
             root->left = rotateLeft(root->left);
@@ -111,6 +120,31 @@ Node * insertInto (Node * root , Node * newNode)
     return root;
 
 }
+
+/*
+
+For AVL Tree , every node in the BST should be balanced
+~ balance factor (bf) = height(node->left) - height(node->right)
+Node is said to be balanced when balance factor (bf) of node : 
+bf = [-1 , 0 , 1] 
+if bf =  0   -> truly balanced
+if bf =  1   -> left heavy 
+if bf = -1  -> right heavy  
+
+if (bf > 1) -> left imbalance
+->   if bf(left_child) ==  1 -> left heavy =>  LL Rotation
+->   if bf(left_child) == -1 -> right heavy => LR rotation 
+
+if (bf < -1) -> right imbalance
+-> if bf(right_child) == -1 -> right heavy => RR Rotation
+-> if bf(right_child) ==  1 -> left heavy  => RL Rotation
+
+LL Rotation : i) rotateRight(node)
+RR Rotation : i) rotateLeft(node)
+LR Rotation : i) rotateLeft(node->left)   (ii) rotateRight(node)
+RL Rotation : i) rotateRight(node->right) (ii) rotateLeft(node)
+
+*/
 
 void levelRec(std::queue<Node *> main_queue)
 {
